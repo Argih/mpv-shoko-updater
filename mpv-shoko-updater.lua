@@ -37,21 +37,23 @@ local WHITELIST_DIRS = {
 -- When to trigger watched update (percentage of total playback)
 local TRIGGER_PERCENT = 50
 
-
 -- Log file location
 local LOG_FILE = (os.getenv("APPDATA") and os.getenv("APPDATA") .. "\\mpv\\mpv-shoko-updater.log")
               or (os.getenv("HOME") .. "/.config/mpv/mpv-shoko-updater.log")
 
+
 -----------------------
 -- INTERNAL VARIABLES --
 -----------------------
-local duration = mp.get_property_number("duration", 0) -- Get duration of the video when the script starts
+local duration = 0 
 local has_triggered = false -- Flag to avoid unnecesary processing time if the triggerpoint has been reached already
+local path = nil
 
 -----------------------
 -- HELPER FUNCTIONS  --
 -----------------------
 
+-- Formating of the log files
 local function log_message(level, message)
     local timestamp = os.date("%Y-%m-%d %H:%M:%S")
     local entry = string.format("[%s] %s - %s\n", timestamp, level, message)
@@ -158,13 +160,13 @@ end
 -- EVENT HANDLERS    --
 -----------------------
 
-
-mp.observe_property("time-pos", "number", function(_, pos)
-    if not pos or has_triggered then return end
-
-    local path = mp.get_property("path")
+-- Checks if file is not a stream and is whitelisted and initialize variables
+mp.register_event("file-loaded", function()
+    path = mp.get_property("path")
+	
     if not path or path:find("^https?://") then
-        return -- ignore streams
+		has_triggered = true
+        return -- ignore streams and invalid files
     end
 
     -- Check if the path is whitelisted first
@@ -174,6 +176,15 @@ mp.observe_property("time-pos", "number", function(_, pos)
         has_triggered = true
         return
     end
+	
+	has_triggered = false
+    duration = mp.get_property_number("duration", 0)
+    log_message("INFO", "Duration set to " .. duration)
+end)
+
+
+mp.observe_property("time-pos", "number", function(_, pos)
+    if not pos or has_triggered then return end
 
     if duration > 0 then
         local percent_watched = (pos / duration) * 100
@@ -194,10 +205,4 @@ mp.observe_property("time-pos", "number", function(_, pos)
             has_triggered = true
         end
     end
-end)
-
-
--- Reset trigger when new file starts
-mp.register_event("start-file", function()
-    has_triggered = false
 end)
