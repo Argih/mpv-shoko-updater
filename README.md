@@ -24,7 +24,7 @@ It is designed for **mpv** media player and works across Windows, Linux, and mac
    - Download from: [https://dkolf.de/dkjson-lua/](https://dkolf.de/dkjson-lua/)
    - Fow Windows place `dkjson.lua` inside the `lua` folder of your mpv installation directory (not in the scripts directory).
       - Create the `lua` folder if it doesn't exist.
-   - For linux refer to your ditro's package names but is usually named lua51-dkjson
+   - For linux refer to your ditsro's package names but is usually named `lua51-dkjson`
 
 ---
 
