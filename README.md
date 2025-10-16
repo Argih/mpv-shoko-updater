@@ -22,8 +22,9 @@ It is designed for **mpv** media player and works across Windows, Linux, and mac
 2. **Shoko Server** running with API v3 enabled (default instalation).
 3. **dkjson.lua** library:
    - Download from: [https://dkolf.de/dkjson-lua/](https://dkolf.de/dkjson-lua/)
-   - Place `dkjson.lua` inside the `lua` folder of your mpv installation directory (not in the scripts directory).
-   - Create the `lua` folder if it doesn't exist.
+   - Fow Windows place `dkjson.lua` inside the `lua` folder of your mpv installation directory (not in the scripts directory).
+      - Create the `lua` folder if it doesn't exist.
+   - For linux refer to your ditro's package names but is usually named lua51-dkjson
 
 ---
 
